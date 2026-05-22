@@ -17,3 +17,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: myna-outlined
+      fonts:
+        - asset: assets/fonts/myna-outlined.otf
+    - family: myna-solid
+      fonts:
+        - asset: assets/fonts/myna-solid.otf
