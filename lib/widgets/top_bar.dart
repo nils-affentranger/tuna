@@ -9,36 +9,33 @@ class TopBar extends StatelessWidget {
   });
 
   final String title;
-  final Widget? buttonLeft;
-  final Widget? buttonRight;
+  final IconButton? buttonLeft;
+  final IconButton? buttonRight;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: Container(
-        height: kToolbarHeight,
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 32,
-              ),
+    return Container(
+      height: kToolbarHeight,
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 32,
             ),
+          ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                buttonLeft ?? const SizedBox(width: 40),
-                buttonRight ?? const SizedBox(width: 40),
-              ],
-            ),
-          ],
-        ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              buttonLeft ?? const SizedBox(width: 40),
+              buttonRight ?? const SizedBox(width: 40),
+            ],
+          ),
+        ],
       ),
     );
   }

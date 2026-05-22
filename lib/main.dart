@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tuna/widgets/top_bar.dart';
+import 'package:tuna/screens/settings_screen.dart';
+import 'package:tuna/screens/tuner_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -16,27 +17,16 @@ class MainApp extends StatelessWidget {
         fontFamily: 'Inter',
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
-            fontWeight: FontWeight.w200,
+            fontWeight: FontWeight.w300,
             color: Colors.black,
           ),
         ),
       ),
-      home: Scaffold(
-        body: Column(
-          children: [
-            TopBar(
-              buttonRight: IconButton(
-                icon: const Icon(Icons.settings_outlined, color: Colors.black),
-                onPressed: () { print('settings'); },
-              ),
-              buttonLeft: IconButton(
-                icon: const Icon(Icons.help_outline, color: Colors.black),
-                onPressed: () { print('help'); },
-              ),
-            ),
-          ],
-        )
-      ),
+      initialRoute: '/',
+      routes: {
+        '/': (_) => const TunerScreen(),
+        '/settings': (_) => const SettingsScreen(),
+      },
     );
   }
 }
