@@ -49,40 +49,34 @@ class Instrument {
 
 class InstrumentString {
   final int index;
-  final String label;
-  final double frequency;
+  final double note;
 
   InstrumentString({
     required this.index,
-    required this.label,
-    required this.frequency,
+    required this.note,
   });
 
   factory InstrumentString.fromJson(Map<String, dynamic> json) {
     return InstrumentString(
       index: json['index'] as int,
-      label: json['label'] as String,
-      frequency: (json['frequency'] as num).toDouble(),
+      note: (json['note'] as num).toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'index': index,
-      'label': label,
-      'frequency': frequency,
+      'note': note,
     };
   }
 
   InstrumentString copyWith({
     int? index,
-    String? label,
-    double? frequency,
+    double? note,
   }) {
     return InstrumentString(
       index: index ?? this.index,
-      label: label ?? this.label,
-      frequency: frequency ?? this.frequency,
+      note: note ?? this.note,
     );
   }
 }

@@ -1,0 +1,111 @@
+{
+  "ukulele": {
+    "iconPath": "assets/images/ukulele.svg",
+    "instruments": [
+      {
+        "id": "uke_standard",
+        "name": "Standard",
+        "strings": [
+          {"index": 0, "note": "G4"},
+          {"index": 1, "note": "C4"},
+          {"index": 2, "note": "E4"},
+          {"index": 3, "note": "A4"}
+        ]
+      },
+      {
+        "id": "uke_low_g",
+        "name": "Low G",
+        "strings": [
+          {"index": 0, "note": "G3"},
+          {"index": 1, "note": "C4"},
+          {"index": 2, "note": "E4"},
+          {"index": 3, "note": "A4"}
+        ]
+      },
+      {
+        "id": "uke_baritone",
+        "name": "Baritone",
+        "strings": [
+          {"index": 0, "note": "D3"},
+          {"index": 1, "note": "G3"},
+          {"index": 2, "note": "B3"},
+          {"index": 3, "note": "E4"}
+        ]
+      },
+      {
+        "id": "uke_hawaiian",
+        "name": "Hawaiian",
+        "strings": [
+          {"index": 0, "note": "A4"},
+          {"index": 1, "note": "D4"},
+          {"index": 2, "note": "F#4"},
+          {"index": 3, "note": "B4"}
+        ]
+      }
+    ]
+  },
+  "guitar": {
+    "iconPath": "assets/images/guitar.svg",
+    "instruments": [
+      {
+        "id": "gtr_standard",
+        "name": "Standard",
+        "strings": [
+          {"index": 0, "note": "E2"},
+          {"index": 1, "note": "A2"},
+          {"index": 2, "note": "D3"},
+          {"index": 3, "note": "G3"},
+          {"index": 4, "note": "B3"},
+          {"index": 5, "note": "E4"}
+        ]
+      },
+      {
+        "id": "gtr_baritone",
+        "name": "Baritone",
+        "strings": [
+          {"index": 0, "note": "B1"},
+          {"index": 1, "note": "E2"},
+          {"index": 2, "note": "A2"},
+          {"index": 3, "note": "D3"},
+          {"index": 4, "note": "F#3"},
+          {"index": 5, "note": "B3"}
+        ]
+      },
+      {
+        "id": "gtr_requinto",
+        "name": "Requinto",
+        "strings": [
+          {"index": 0, "note": "A2"},
+          {"index": 1, "note": "D3"},
+          {"index": 2, "note": "G3"},
+          {"index": 3, "note": "C4"},
+          {"index": 4, "note": "E4"},
+          {"index": 5, "note": "A4"}
+        ]
+      },
+      {
+        "id": "gtr_7_string",
+        "name": "7-String",
+        "strings": [
+          {"index": 0, "note": "B1"},
+          {"index": 1, "note": "E2"},
+          {"index": 2, "note": "A2"},
+          {"index": 3, "note": "D3"},
+          {"index": 4, "note": "G3"},
+          {"index": 5, "note": "B3"},
+          {"index": 6, "note": "E4"}
+        ]
+      },
+      {
+        "id": "gtr_tenor",
+        "name": "Tenor",
+        "strings": [
+          {"index": 0, "note": "C3"},
+          {"index": 1, "note": "G3"},
+          {"index": 2, "note": "D4"},
+          {"index": 3, "note": "A4"}
+        ]
+      }
+    ]
+  }
+}
