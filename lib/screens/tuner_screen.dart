@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:tuna/widgets/top_bar.dart';
 import 'package:tuna/icons/myna_solid.dart';
+import 'package:tuna/services/pitch_stream.dart';
 import 'package:tuna/widgets/tuner_gauge.dart';
+import 'package:tuna/widgets/top_bar.dart';
 
 /// A4 = 440 Hz equal temperament.
 const double _a4Hz = 440;
@@ -75,15 +77,50 @@ class TunerScreen extends StatefulWidget {
 }
 
 class _TunerScreenState extends State<TunerScreen> {
-  static final double _hzC4 = _hzForMidi(60);
-  static final double _hzC5 = _hzForMidi(72);
+  final PitchStream _pitchStream = PitchStream();
+  StreamSubscription<PitchReading>? _pitchSubscription;
+  PitchReading _reading = const PitchReading(hz: 0, clarity: 0);
+  String? _errorMessage;
 
-  /// UI-test only: C4–C5 range, note + cents from nearest tempered pitch.
-  double _testHz = _a4Hz;
+  @override
+  void initState() {
+    super.initState();
+    _pitchSubscription = _pitchStream.listen().listen(
+      (reading) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _reading = reading;
+          _errorMessage = null;
+        });
+      },
+      onError: (Object error) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _reading = const PitchReading(hz: 0, clarity: 0);
+          _errorMessage = 'Microphone unavailable';
+        });
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _pitchSubscription?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final detected = _pitchFromHz(_testHz);
+    final detected = _pitchFromHz(_reading.hz);
+    final statusText =
+        _errorMessage ??
+        (_reading.hasPitch
+            ? 'Mic input · ${(_reading.clarity * 100).round()}% clarity'
+            : 'Listening for a stable pitch');
 
     return Scaffold(
       body: SafeArea(
@@ -105,38 +142,20 @@ class _TunerScreenState extends State<TunerScreen> {
                   letter: detected.letter,
                   accidental: detected.accidental,
                   semanticsLabel: detected.semanticsLabel,
-                  hz: _testHz,
+                  hz: _reading.hz,
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Test frequency (slider)',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  Slider(
-                    value: _testHz,
-                    min: _hzC4,
-                    max: _hzC5,
-                    label:
-                        '${detected.semanticsLabel} · ${_testHz.toStringAsFixed(2)} Hz',
-                    onChanged: (v) => setState(() => _testHz = v),
-                  ),
-                  Text(
-                    'Nearest equal-tempered note (440 Hz A4). Needle clamped to ±50¢.',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+              child: Text(
+                statusText,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: _errorMessage == null
+                      ? Theme.of(context).colorScheme.onSurfaceVariant
+                      : Theme.of(context).colorScheme.error,
+                ),
               ),
             ),
           ],
