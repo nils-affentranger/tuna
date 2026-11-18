@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class PitchReading {
@@ -22,6 +23,13 @@ class PitchReading {
 class PitchStream {
   static const EventChannel _channel = EventChannel('tuna/pitch_stream');
 
-  Stream<PitchReading> listen() =>
-      _channel.receiveBroadcastStream().map(PitchReading.fromEvent);
+  static bool get isSupported =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+
+  Stream<PitchReading> listen() {
+    if (!isSupported) {
+      return const Stream.empty();
+    }
+    return _channel.receiveBroadcastStream().map(PitchReading.fromEvent);
+  }
 }
