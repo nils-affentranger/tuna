@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 class _BottomCenteredNote extends StatelessWidget {
   final String letter;
   final String accidental;
+  final String octave;
   final TextStyle style;
 
   const _BottomCenteredNote({
     required this.letter,
     required this.accidental,
+    required this.octave,
     required this.style,
   });
 
@@ -20,7 +22,10 @@ class _BottomCenteredNote extends StatelessWidget {
     final baseStyle = style.copyWith(height: 1.0);
     final accStyle = baseStyle.copyWith(
       fontSize: (baseStyle.fontSize ?? 100) * 0.45,
-      color: Colors.black54,
+    );
+    final octaveStyle = baseStyle.copyWith(
+      fontSize: (baseStyle.fontSize ?? 100) * 0.28,
+      color: baseStyle.color?.withValues(alpha: 0.62) ?? Colors.black54,
     );
 
     final letterPainter = TextPainter(
@@ -51,6 +56,12 @@ class _BottomCenteredNote extends StatelessWidget {
               bottom: lh * 0.65,
               child: Text(accidental, style: accStyle),
             ),
+            if (octave.isNotEmpty)
+              Positioned(
+                left: letterLeft + lw,
+                bottom: 0,
+                child: Text(octave, style: octaveStyle),
+              ),
           ],
         ),
       ),
@@ -66,8 +77,11 @@ class TunerGauge extends StatelessWidget {
   /// Screen reader / semantics string (e.g. `C#`).
   final String semanticsLabel;
 
-  /// Frequency to show below the gauge (e.g. from mic or a UI test slider).
+  /// Frequency to show below the gauge.
   final double hz;
+
+  final String octave;
+  final Color noteColor;
 
   const TunerGauge({
     super.key,
@@ -76,6 +90,8 @@ class TunerGauge extends StatelessWidget {
     required this.accidental,
     required this.semanticsLabel,
     this.hz = 440,
+    this.octave = '',
+    this.noteColor = Colors.black,
   });
 
   @override
@@ -85,7 +101,7 @@ class TunerGauge extends StatelessWidget {
       children: [
         CustomPaint(
           size: const Size(320, 185),
-          painter: _TunerPainter(cents),
+          painter: _TunerPainter(cents, noteColor),
           child: Container(
             height: 160,
             alignment: Alignment.bottomCenter,
@@ -94,18 +110,19 @@ class TunerGauge extends StatelessWidget {
               child: _BottomCenteredNote(
                 letter: letter,
                 accidental: accidental,
+                octave: octave,
                 style:
                     Theme.of(context).textTheme.displayLarge?.copyWith(
                       fontSize: 100,
                       height: 1.0,
                       fontWeight: FontWeight.w200,
-                      color: Colors.black,
+                      color: noteColor,
                     ) ??
-                    const TextStyle(
+                    TextStyle(
                       fontSize: 100,
                       height: 1.0,
                       fontWeight: FontWeight.w200,
-                      color: Colors.black,
+                      color: noteColor,
                     ),
               ),
             ),
@@ -117,7 +134,11 @@ class TunerGauge extends StatelessWidget {
           textBaseline: TextBaseline.alphabetic,
           children: [
             Text(
-              hz >= 100 ? hz.toStringAsFixed(1) : hz.toStringAsFixed(2),
+              hz <= 0
+                  ? '—'
+                  : hz >= 100
+                  ? hz.toStringAsFixed(1)
+                  : hz.toStringAsFixed(2),
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w300,
                 color: Colors.black,
@@ -142,7 +163,8 @@ class TunerGauge extends StatelessWidget {
 
 class _TunerPainter extends CustomPainter {
   final double cents;
-  _TunerPainter(this.cents);
+  final Color needleColor;
+  _TunerPainter(this.cents, this.needleColor);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -214,7 +236,7 @@ class _TunerPainter extends CustomPainter {
       ..shader = LinearGradient(
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
-        colors: const [Colors.transparent, Colors.black],
+        colors: [Colors.transparent, needleColor],
         stops: const [0.2, 1],
       ).createShader(Rect.fromPoints(nStart, nEnd));
 
@@ -253,5 +275,5 @@ class _TunerPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _TunerPainter oldDelegate) =>
-      oldDelegate.cents != cents;
+      oldDelegate.cents != cents || oldDelegate.needleColor != needleColor;
 }

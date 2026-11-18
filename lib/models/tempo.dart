@@ -1,3 +1,25 @@
+String tempoMarking(double bpm) {
+  if (bpm < 60) {
+    return 'Largo';
+  }
+  if (bpm < 76) {
+    return 'Adagio';
+  }
+  if (bpm < 108) {
+    return 'Andante';
+  }
+  if (bpm < 120) {
+    return 'Moderato';
+  }
+  if (bpm < 156) {
+    return 'Allegro';
+  }
+  if (bpm < 176) {
+    return 'Vivace';
+  }
+  return 'Presto';
+}
+
 class Tempo {
   final String id;
   final String name;
@@ -13,7 +35,7 @@ class Tempo {
     return Tempo(
       id: json['id'] as String,
       name: json['name'] as String,
-      bpm: (json['double'] as num).toDouble(),
+      bpm: (json['bpm'] as num).toDouble(),
     );
   }
 
